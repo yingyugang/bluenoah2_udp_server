@@ -22,6 +22,7 @@ type UserMessage struct {
 	  MaxHp int
 	  Damage float64
 	  UserName string
+	  Uuid string
 }
 
 type UserConn struct {
@@ -32,8 +33,11 @@ type UserConn struct {
 }
 
 type AllUserMessage struct {
-	 UserMessages [4]string
+	API int
+	UserMessages [4]UserMessage
 }
+
+var SynchronizeUserAPI int = 10
 
 var userMap map[string]UserConn
 
@@ -43,6 +47,7 @@ func Send() {
 	for {
 		time.Sleep(1000 * time.Millisecond)
 		var users AllUserMessage
+		users.API = SynchronizeUserAPI
 		var i int
 		for  k := range userMap{
 			if len(userMap[k].uuid) != 0{
@@ -109,6 +114,7 @@ func main() {
 		if baseMessage.API == 10{
 			var userMessage UserMessage
 			json.Unmarshal([]byte(baseMessage.Message),&userMessage)
+			userMessage.Uuid = baseMessage.Uuid
 			if val,ok := userMap[baseMessage.Uuid]; ok{
 				val.address = addr
 				val.userMessage = userMessage
