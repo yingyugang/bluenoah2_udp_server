@@ -52,15 +52,10 @@ func Send() {
 		for  k := range userMap{
 			if len(userMap[k].uuid) != 0{
 				if userMap[k].tick > 0{
-					result,err := json.Marshal(userMap[k].userMessage)
-					if err != nil {
-						fmt.Printf("userMap[v].userMessage, err:%v\n", err)
-					}else {
-						users.UserMessages[i] = string(result)
-					}
 					var user = userMap[k]
 					user.tick = userMap[k].tick - 1
 					userMap[k] = user
+					users.UserMessages[i] = user.userMessage
 				}else{
 					delete(userMap,k)
 				}
@@ -69,7 +64,7 @@ func Send() {
 		}
 		if i > 0{
 			result,err := json.Marshal(users)
-			fmt.Println(string(result))
+			fmt.Printf("Send:%v\n", string(result))
 			if err!=nil{
 				fmt.Printf("users, err:%v\n", err)
 			}
